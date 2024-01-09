@@ -17,12 +17,20 @@ class PacienteAPIView(APIView):
             paciente_serializer.save()
             return Response(paciente_serializer.data, status=status.HTTP_201_CREATED)
         return Response(paciente_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
-    def get(self, request, curp, format=None):
-        try:
-            paciente = Paciente.objects.get(CURP=curp)
-        except Paciente.DoesNotExist:
-            return Response({""})
+
+
+class BuscarPacienteAPIView(APIView):
+    def get(self, request, *args, **kwargs):
+        query = request.GET.get("query", "")
+
+        pacientes = Paciente.objects.filter(
+            Q(datos_personales__nombre__icontains=query)
+            | Q(datos_contacto__telefono__contains=query)
+            | Q(CURP__icontains=query)
+        )
+
+        paciente_serializer = PacienteSerializer(pacientes, many=True)
+        return Response(paciente_serializer.data, status=status.HTTP_200_OK)
 
 
 class CitaAPIView(APIView):
