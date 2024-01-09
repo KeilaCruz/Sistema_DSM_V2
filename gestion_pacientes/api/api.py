@@ -1,8 +1,8 @@
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from gestion_pacientes.models import Paciente
+from gestion_pacientes.models import Paciente, Cita
 from rest_framework import status
-from .serializers import PacienteSerializer
+from .serializers import PacienteSerializer, CitaSerializer
 
 
 class PacienteAPIView(APIView):
@@ -17,3 +17,20 @@ class PacienteAPIView(APIView):
             paciente_serializer.save()
             return Response(paciente_serializer.data, status=status.HTTP_201_CREATED)
         return Response(paciente_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    def get(self, request, curp, format=None):
+        try 
+
+
+class CitaAPIView(APIView):
+    def get(self, request):
+        citas = Cita.objects.all()
+        cita_serializer = CitaSerializer(citas, many=True)
+        return Response(cita_serializer.data)
+
+    def post(self, request, *args, **kwargs):
+        cita_serializer = CitaSerializer(data=request.data)
+        if cita_serializer.is_valid():
+            cita_serializer.save()
+            return Response(cita_serializer.data, status=status.HTTP_201_CREATED)
+        return Response(cita_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
