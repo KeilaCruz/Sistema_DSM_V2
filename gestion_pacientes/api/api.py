@@ -18,8 +18,7 @@ class PacienteAPIView(APIView):
             return Response(paciente_serializer.data, status=status.HTTP_201_CREATED)
         return Response(paciente_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
-    def get(self, request, curp, format=None):
-        try 
+  
 
 
 class CitaAPIView(APIView):
