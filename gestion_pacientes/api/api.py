@@ -19,7 +19,10 @@ class PacienteAPIView(APIView):
         return Response(paciente_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
     def get(self, request, curp, format=None):
-        try 
+        try:
+            paciente = Paciente.objects.get(CURP=curp)
+        except Paciente.DoesNotExist:
+            return Response({""})
 
 
 class CitaAPIView(APIView):
